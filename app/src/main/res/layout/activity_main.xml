@@ -11,7 +11,7 @@
     tools:context="com.example.abhinav.simpletodo.MainActivity">
 
     <Button
-        android:text="Button"
+        android:text="@string/submit_button"
         android:onClick="onSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
