@@ -17,26 +17,29 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static android.R.attr.start;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class MainActivity extends AppCompatActivity {
-    private ArrayList<String> items;
-    private ArrayAdapter<String> itemsAdapter;
+    private ArrayList<Item> items;
+    private ItemAdapter itemsAdapter;
     private ListView lvItems;
-
+    private TodoItemDatabase databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        databaseHelper = TodoItemDatabase.getInstance(this);
         setContentView(R.layout.activity_main);
         lvItems = (ListView) findViewById(R.id.lvItems);
-        items=new ArrayList<>();
-        readItems();
-        itemsAdapter= new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,items);
+        items= databaseHelper.getAllItems();
+        itemsAdapter= new ItemAdapter(this, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
+
+
     }
 
     public void onSubmit(View view) {
@@ -45,19 +48,24 @@ public class MainActivity extends AppCompatActivity {
         if(itemText.isEmpty()){
             Toast.makeText(this,"Can't add empty item",Toast.LENGTH_SHORT).show();
         }else{
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
-        writeItems();
-        setupListViewListener();
-    }}
+            Item item=new Item();
+            item.text= itemText;
+            itemsAdapter.add(item);
+            item.id= (int) databaseHelper.addItem(item);
+            etNewItem.setText("");
+            setupListViewListener();
+        }}
 
     private void setupListViewListener() {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View item, int pos, long id) {
+
+                Item listItem= new Item();
+                listItem = items.get(pos);
                 items.remove(pos);
+                databaseHelper.deleteItem(listItem);
                 itemsAdapter.notifyDataSetChanged();
-                writeItems();
                 return true;
             }
         });
@@ -65,12 +73,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent editIntent= new Intent(MainActivity.this,EditItemActivity.class);
-                editIntent.putExtra("EditText",items.get(i));
+                Log.i("Item",items.get(i).text);
+                Log.i("Id",String.valueOf(items.get(i).id));
+                editIntent.putExtra("EditText",items.get(i).text);
+                editIntent.putExtra("EditId", items.get(i).id);
                 editIntent.putExtra("position", i);
-                    startActivityForResult(editIntent,20);
-;            }
-
-
+                startActivityForResult(editIntent,20);
+            }
         });
 
     }
@@ -81,32 +90,17 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK && requestCode==20){
             int position = data.getExtras().getInt("pos");
             Log.i("MainAcitivity",""+position);
-            items.set(position,data.getExtras().getString("EditText"));
-            Log.i("intent data",data.getExtras().getString("EditText"));
-            Log.i("item",items.get(position));
+            Item item=items.get(position);
+            item.text = data.getExtras().getString("resultText");
+            item.id= data.getExtras().getInt("resultId");
+            items.set(position, item);
+
+            Log.i("intent data",data.getExtras().getString("resultText"));
+            Log.i("item",String.valueOf(items.get(position).id));
+
             itemsAdapter.notifyDataSetChanged();
-            writeItems();
-        }
-    }
+            databaseHelper.update(item);
 
-    private void readItems(){
-        File filesDir  = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try{
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        }catch(IOException ie){
-            items= new ArrayList<>();
         }
-    }
-
-    private void writeItems(){
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir,"todo.txt");
-        try{
-            FileUtils.writeLines(todoFile,items);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 }
