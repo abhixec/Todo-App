@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import static android.R.attr.data;
 import static android.R.attr.name;
 
 /**
@@ -21,7 +24,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
     private static TodoItemDatabase sInstance;
     // Database Info
     private static String DATABASE_NAME = "todoItems";
-    private static int DATABASE_VERSION = 1;
+    private static int DATABASE_VERSION = 2;
 
     // Table name
     private static String TABLE_ITEMS="items";
@@ -29,6 +32,8 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
     // Items Table columns
     private static String KEY_ITEMS_ID="id";
     private static String KEY_ITEMS_TEXT ="text";
+    private static String KEY_ITEMS_PRIORITY="priority";
+    private static String KEY_ITEMS_DATE="date";
 
     public static synchronized TodoItemDatabase getInstance(Context context) {
         if (sInstance == null) {
@@ -45,7 +50,9 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
         String CREATE_ITEMS_TABLE = "CREATE TABLE "+ TABLE_ITEMS +
                 "("
                 + KEY_ITEMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + KEY_ITEMS_TEXT + " TEXT" + ")";
+                + KEY_ITEMS_TEXT + " TEXT, "
+                + KEY_ITEMS_PRIORITY + " TEXT, "
+                + KEY_ITEMS_DATE +" TEXT" +")";
         sqLiteDatabase.execSQL(CREATE_ITEMS_TABLE);
     }
 
@@ -65,6 +72,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
         try{
             ContentValues values = new ContentValues();
             values.put(KEY_ITEMS_TEXT,listItem.text);
+            values.put(KEY_ITEMS_PRIORITY, listItem.priority);
             itemsId=db.insertOrThrow(TABLE_ITEMS,null, values);
             Log.i("id",String.valueOf(itemsId));
             db.setTransactionSuccessful();
@@ -79,6 +87,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_ITEMS_TEXT, listItem.text);
+        values.put(KEY_ITEMS_PRIORITY,listItem.priority);
         return db.update(TABLE_ITEMS,values, KEY_ITEMS_ID+" = ? ",new String[] { String.valueOf(listItem.id) });
     }
     public ArrayList<Item> getAllItems(){
@@ -92,7 +101,13 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
                     Item item = new Item();
                     item.text = cursor.getString(cursor.getColumnIndex(KEY_ITEMS_TEXT));
                     item.id= cursor.getInt(cursor.getColumnIndex(KEY_ITEMS_ID));
+                    item.priority= cursor.getString(cursor.getColumnIndex(KEY_ITEMS_PRIORITY));
+//                    item.dueDate= new SimpleDateFormat("dd/MM/yyyy").parse(cursor.getString(cursor.getColumnIndex(KEY_ITEMS_DATE)));
                     itemsList.add(item);
+                    Log.i("Text",item.text);
+                    Log.i("id",String.valueOf(item.id));
+                    Log.i("pri", item.priority);
+
                 }while(cursor.moveToNext());
             }
         }catch(Exception e ){

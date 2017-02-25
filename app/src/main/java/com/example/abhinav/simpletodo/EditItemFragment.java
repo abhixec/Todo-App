@@ -9,10 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import java.util.Arrays;
+
+import static com.example.abhinav.simpletodo.AddItemFragment.PRIORITYLIST;
 
 /**
  * Created by janabhi on 2/23/17.
@@ -25,6 +31,7 @@ public class EditItemFragment extends DialogFragment  {
     }
 
     private EditText mEditText;
+    private Spinner dropdown;
     public EditItemFragment(){
 
     }
@@ -35,6 +42,7 @@ public class EditItemFragment extends DialogFragment  {
         args.putString("title", title);
         args.putString("item", item.text);
         args.putInt("id",item.id);
+        args.putString("priority", item.priority);
         args.putInt("position", position);
         frag.setArguments(args);
         return frag;
@@ -43,8 +51,7 @@ public class EditItemFragment extends DialogFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.activity_edit_item, container);
+        return inflater.inflate(R.layout.activity_add_item, container);
     }
 
     @Override
@@ -56,11 +63,15 @@ public class EditItemFragment extends DialogFragment  {
         mEditText.setText(getArguments().getString("item"));
         // Fetch arguments from bundle and set title
         String title = getArguments().getString("title");
+        dropdown = (Spinner) view.findViewById(R.id.priority);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_dropdown_item, PRIORITYLIST);
+        dropdown.setAdapter(adapter);
+        dropdown.setSelection(Arrays.asList(PRIORITYLIST).indexOf(getArguments().getString("priority")));
         getDialog().setTitle(title);
         // Show soft keyboard automatically and request focus to field
         mEditText.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        Button doneButton= (Button) view.findViewById(R.id.button);
+        Button doneButton= (Button) view.findViewById(R.id.add_button);
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,11 +79,12 @@ public class EditItemFragment extends DialogFragment  {
                 Item it = new Item();
                 it.text = mEditText.getText().toString();
                 it.id= getArguments().getInt("id");
+                it.priority = dropdown.getSelectedItem().toString();
                 ((MainActivity)getActivity()).updateItem(it, getArguments().getInt("position"));
                 dismiss();
             }
         });
-        Button cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,5 +92,4 @@ public class EditItemFragment extends DialogFragment  {
             }
         });
     }
-
 }

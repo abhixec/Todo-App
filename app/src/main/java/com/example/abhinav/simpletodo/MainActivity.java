@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         lvItems = (ListView) findViewById(R.id.lvItems);
         items= databaseHelper.getAllItems();
+        Log.i("Items",items.toString());
         itemsAdapter= new ItemAdapter(this, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
@@ -46,19 +48,19 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    public void onSubmit(View view) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        String itemText = etNewItem.getText().toString();
-        if(itemText.isEmpty()){
-            Toast.makeText(this,"Can't add empty item",Toast.LENGTH_SHORT).show();
-        }else{
-            Item item=new Item();
-            item.text= itemText;
-            itemsAdapter.add(item);
-            item.id= (int) databaseHelper.addItem(item);
-            etNewItem.setText("");
-            setupListViewListener();
-        }}
+//    public void onSubmit(View view) {
+//        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
+//        String itemText = etNewItem.getText().toString();
+//        if(itemText.isEmpty()){
+//            Toast.makeText(this,"Can't add empty item",Toast.LENGTH_SHORT).show();
+//        }else{
+//            Item item=new Item();
+//            item.text= itemText;
+//            itemsAdapter.add(item);
+//            item.id= (int) databaseHelper.addItem(item);
+//            etNewItem.setText("");
+//            setupListViewListener();
+//        }}
 
     private void setupListViewListener() {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -84,11 +86,8 @@ public class MainActivity extends AppCompatActivity{
 
     public void showEditDialog(Item item, int position) {
         FragmentManager fm = getSupportFragmentManager();
-
         EditItemFragment editNameDialogFragment = EditItemFragment.newInstance("Edit Item",item, position);
-
         editNameDialogFragment.show(fm, "fragment_edit_name");
-
     }
 
 
@@ -96,6 +95,21 @@ public class MainActivity extends AppCompatActivity{
         items.set(position, item);
         itemsAdapter.notifyDataSetChanged();
         databaseHelper.update(item);
+    }
+
+    public void addItem(View view) {
+        showAddDialog();
+    }
+
+    public void showAddDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        AddItemFragment editNameDialogFragment = AddItemFragment.newInstance("Add Item");
+        editNameDialogFragment.show(fm, "fragment_edit_name");
+    }
+    public void addNewItem(Item item) {
+        itemsAdapter.add(item);
+        databaseHelper.addItem(item);
+        itemsAdapter.notifyDataSetChanged();
     }
 
 }

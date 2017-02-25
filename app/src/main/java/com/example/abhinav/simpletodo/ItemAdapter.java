@@ -1,7 +1,9 @@
 package com.example.abhinav.simpletodo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,16 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         }
         TextView itemText= (TextView) convertView.findViewById(R.id.textView);
         itemText.setText(item.text);
+        if(item.priority == "High"){
+            itemText.setAllCaps(true);
+            itemText.setTextColor(Color.RED);
+        }
+        else if(item.priority == "Medium"){
+            itemText.setTextColor(Color.MAGENTA);
+        }
+        else{
+            itemText.setTextColor(Color.DKGRAY);
+        }
         return convertView;
     }
 }
