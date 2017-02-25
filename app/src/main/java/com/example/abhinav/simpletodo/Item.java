@@ -10,4 +10,6 @@ public class Item {
     public int id;
     public String text;
     public String priority;
+    public String date;
+
 }

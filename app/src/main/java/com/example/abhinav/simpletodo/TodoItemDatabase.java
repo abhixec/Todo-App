@@ -73,6 +73,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(KEY_ITEMS_TEXT,listItem.text);
             values.put(KEY_ITEMS_PRIORITY, listItem.priority);
+            values.put(KEY_ITEMS_DATE,listItem.date);
             itemsId=db.insertOrThrow(TABLE_ITEMS,null, values);
             Log.i("id",String.valueOf(itemsId));
             db.setTransactionSuccessful();
@@ -88,6 +89,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_ITEMS_TEXT, listItem.text);
         values.put(KEY_ITEMS_PRIORITY,listItem.priority);
+        values.put(KEY_ITEMS_DATE, listItem.date);
         return db.update(TABLE_ITEMS,values, KEY_ITEMS_ID+" = ? ",new String[] { String.valueOf(listItem.id) });
     }
     public ArrayList<Item> getAllItems(){
@@ -102,7 +104,7 @@ public class TodoItemDatabase extends SQLiteOpenHelper {
                     item.text = cursor.getString(cursor.getColumnIndex(KEY_ITEMS_TEXT));
                     item.id= cursor.getInt(cursor.getColumnIndex(KEY_ITEMS_ID));
                     item.priority= cursor.getString(cursor.getColumnIndex(KEY_ITEMS_PRIORITY));
-//                    item.dueDate= new SimpleDateFormat("dd/MM/yyyy").parse(cursor.getString(cursor.getColumnIndex(KEY_ITEMS_DATE)));
+                    item.date= cursor.getString(cursor.getColumnIndex(KEY_ITEMS_DATE));
                     itemsList.add(item);
                     Log.i("Text",item.text);
                     Log.i("id",String.valueOf(item.id));

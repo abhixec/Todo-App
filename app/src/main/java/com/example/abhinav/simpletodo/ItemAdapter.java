@@ -31,16 +31,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         }
         TextView itemText= (TextView) convertView.findViewById(R.id.textView);
         itemText.setText(item.text);
-        if(item.priority == "High"){
-            itemText.setAllCaps(true);
-            itemText.setTextColor(Color.RED);
-        }
-        else if(item.priority == "Medium"){
-            itemText.setTextColor(Color.MAGENTA);
-        }
-        else{
-            itemText.setTextColor(Color.DKGRAY);
-        }
+
+        TextView priorityText = (TextView) convertView.findViewById(R.id.itemPriority);
+        priorityText.setText(item.priority);
+
+        TextView dueDateText = (TextView) convertView.findViewById(R.id.itemDueDate);
+        dueDateText.setText(item.date);
         return convertView;
     }
 }

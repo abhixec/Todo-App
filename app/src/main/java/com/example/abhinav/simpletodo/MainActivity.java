@@ -40,11 +40,9 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         lvItems = (ListView) findViewById(R.id.lvItems);
         items= databaseHelper.getAllItems();
-        Log.i("Items",items.toString());
         itemsAdapter= new ItemAdapter(this, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
-
 
     }
 

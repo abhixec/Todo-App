@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class EditItemFragment extends DialogFragment  {
 
     private EditText mEditText;
     private Spinner dropdown;
+    private DatePicker datePicker;
     public EditItemFragment(){
 
     }
@@ -43,6 +45,7 @@ public class EditItemFragment extends DialogFragment  {
         args.putString("item", item.text);
         args.putInt("id",item.id);
         args.putString("priority", item.priority);
+        args.putString("date",item.date);
         args.putInt("position", position);
         frag.setArguments(args);
         return frag;
@@ -72,7 +75,7 @@ public class EditItemFragment extends DialogFragment  {
         mEditText.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         Button doneButton= (Button) view.findViewById(R.id.add_button);
-
+        datePicker = (DatePicker) view.findViewById(R.id.datePicker);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +83,7 @@ public class EditItemFragment extends DialogFragment  {
                 it.text = mEditText.getText().toString();
                 it.id= getArguments().getInt("id");
                 it.priority = dropdown.getSelectedItem().toString();
+                it.date = String.format("%s/%s/%s",datePicker.getMonth()+1,datePicker.getDayOfMonth(),datePicker.getYear());
                 ((MainActivity)getActivity()).updateItem(it, getArguments().getInt("position"));
                 dismiss();
             }

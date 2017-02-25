@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 public class AddItemFragment extends DialogFragment {
     private EditText mEditText;
     private Spinner dropdownButton;
-    private TextView mDueDate;
+    private DatePicker mDueDate;
     public static final String[] PRIORITYLIST = new String[] {"High", "Medium","Low"};
     public AddItemFragment(){
 
@@ -45,7 +46,7 @@ public class AddItemFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mEditText = (EditText) view.findViewById(R.id.editText);
-        mDueDate = (TextView) view.findViewById(R.id.due_date);
+        mDueDate = (DatePicker) view.findViewById(R.id.datePicker);
         final Item newItem = new Item();
 
         dropdownButton= (Spinner) view.findViewById(R.id.priority);
@@ -76,6 +77,10 @@ public class AddItemFragment extends DialogFragment {
                 }else{
                     newItem.text= mEditText.getText().toString();
                     newItem.priority= dropdownButton.getSelectedItem().toString();
+                    newItem.date = String.format("%s/%s/%s",mDueDate.getMonth()+1,mDueDate.getDayOfMonth(),mDueDate.getYear());
+                    Log.i("Day:",String.valueOf(mDueDate.getDayOfMonth()));
+                    Log.i("Month:",String.valueOf(mDueDate.getMonth()));
+                    Log.i("Year",String.valueOf(mDueDate.getYear()));
                     Log.i("Priority:", dropdownButton.getSelectedItem().toString());
                     ((MainActivity)getActivity()).addNewItem(newItem);
                     dismiss();
