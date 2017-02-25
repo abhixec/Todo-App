@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -54,6 +55,9 @@ public class AddItemFragment extends DialogFragment {
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_dropdown_item, PRIORITYLIST);
         dropdownButton.setAdapter(adapter);
         mEditText.requestFocus();
+        mEditText.setHint("Item todo");
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        mEditText.setText("");
 
         mDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
