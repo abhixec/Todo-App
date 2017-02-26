@@ -13,4 +13,10 @@ The following **required** functionality is completed:
 * [x] User can **persist todo items** and retrieve them properly on app restart
 
 ## Video Walkthrough 
+
+**Updated Version**
+
+![Screen Recording version2](output2.gif)
+
 ![Screen Recording](output.gif)
+
