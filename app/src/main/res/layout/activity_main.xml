@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -10,32 +11,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.abhinav.simpletodo.MainActivity">
 
-    <Button
-        android:text="@string/submit_button"
-        android:onClick="onSubmit"
+
+    <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/floatingActionButton"
+        android:layout_marginEnd="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/btnAddItem" />
-
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/etNewItem"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/btnAddItem" />
+        android:onClick="addItem"
+        app:backgroundTint="?android:attr/colorPrimaryDark"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:rippleColor="@android:color/holo_blue_bright"
+        app:elevation="4dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/btnAddItem"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/lvItems" />
+        android:id="@+id/lvItems"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

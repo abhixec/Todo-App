@@ -1,7 +1,9 @@
 package com.example.abhinav.simpletodo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         }
         TextView itemText= (TextView) convertView.findViewById(R.id.textView);
         itemText.setText(item.text);
+
+        TextView priorityText = (TextView) convertView.findViewById(R.id.itemPriority);
+        priorityText.setText(item.priority);
+
+        TextView dueDateText = (TextView) convertView.findViewById(R.id.itemDueDate);
+        dueDateText.setText(item.date);
         return convertView;
     }
 }
